@@ -1,18 +1,16 @@
 import os
+from dotenv import dotenv_values
+import base64
 
 from flask import Flask
 from flask import request
 
-import base64
 import vertexai
 from vertexai.generative_models import GenerativeModel, Part, FinishReason
 import vertexai.preview.generative_models as generative_models
 
-
-GCP_PROJECT_ID = "[your gcp prpject id]"
-GCP_REGION = "europe-west1"
-
 app = Flask(__name__)
+SECRETS = dotenv_values(".env")
 
 @app.route("/")
 def hello_world():
@@ -36,7 +34,7 @@ def generate_text():
     return generated_text, 200
 
 def generate(system_message, prompt):
-  vertexai.init(project=GCP_PROJECT_ID, location=GCP_REGION)
+  vertexai.init(project=SECRETS["GCP_PROJECT_ID"], location=SECRETS["GCP_REGION"])
   
   generation_config = {
         "max_output_tokens": 8192,
